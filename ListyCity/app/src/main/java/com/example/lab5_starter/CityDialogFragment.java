@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ public class CityDialogFragment extends DialogFragment {
     interface CityDialogListener {
         void updateCity(City city, String title, String year);
         void addCity(City city);
+        void deleteCity(City city);
+
     }
     private CityDialogListener listener;
 
@@ -46,6 +49,7 @@ public class CityDialogFragment extends DialogFragment {
         View view = getLayoutInflater().inflate(R.layout.fragment_city_details, null);
         EditText editMovieName = view.findViewById(R.id.edit_city_name);
         EditText editMovieYear = view.findViewById(R.id.edit_province);
+        Button deleteButton = view.findViewById(R.id.button_delete_city);
 
         String tag = getTag();
         Bundle bundle = getArguments();
@@ -56,9 +60,19 @@ public class CityDialogFragment extends DialogFragment {
             assert city != null;
             editMovieName.setText(city.getName());
             editMovieYear.setText(city.getProvince());
+            deleteButton.setVisibility(View.VISIBLE);
+
         }
         else {
-            city = null;}
+            city = null;
+            deleteButton.setVisibility(View.GONE);
+        }
+        deleteButton.setOnClickListener(v -> {
+            if (city != null) {
+                listener.deleteCity(city);
+            }
+            dismiss();
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
